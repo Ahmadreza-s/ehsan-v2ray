@@ -1,0 +1,129 @@
+<!DOCTYPE html><html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پنل V2rayNG</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+        }body {
+        font-family: 'Vazirmatn', sans-serif;
+        direction: rtl;
+        margin: 0;
+        padding: 0;
+        background-color: #1e1e2f;
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    .container {
+        background-color: rgba(40, 40, 60, 0.95);
+        padding: 30px;
+        border-radius: 15px;
+        width: 90%;
+        max-width: 400px;
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        font-weight: 700;
+        color: #00ffff;
+    }
+
+    label {
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    input, textarea {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: none;
+        border-radius: 8px;
+        background-color: #2c2c3c;
+        color: #fff;
+        font-size: 14px;
+    }
+
+    textarea {
+        height: 180px;
+        resize: vertical;
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(135deg, #00ffff, #007BFF);
+        border: none;
+        border-radius: 8px;
+        color: #000;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    button:hover {
+        background: linear-gradient(135deg, #00cccc, #0056b3);
+    }
+
+    .output {
+        margin-top: 20px;
+    }
+</style>
+
+</head>
+<body>
+    <div class="container">
+        <h1>سازنده V2rayNG</h1><label for="remarks">نام:</label>
+    <input type="text" id="remarks" placeholder="نام را وارد کنید">
+
+    <label for="users">تعداد کاربران:</label>
+    <input type="number" id="users" placeholder="تعداد کاربران">
+
+    <label for="dataLimit">حجم (گیگابایت):</label>
+    <input type="number" id="dataLimit" placeholder="حجم در گیگابایت">
+
+    <label for="days">زمان (روز):</label>
+    <input type="number" id="days" placeholder="تعداد روزها">
+
+    <button onclick="generateConfig()">ایجاد کانفیگ</button>
+
+    <div class="output">
+        <label for="configOutput">کانفیگ:</label>
+        <textarea id="configOutput" readonly></textarea>
+        <button onclick="copyConfig()">کپی کردن کانفیگ</button>
+    </div>
+</div>
+
+<script>
+    function generateConfig() {
+        const remarks = document.getElementById('remarks').value || 'kos mos';
+        const users = document.getElementById('users').value || '1';
+        const dataLimit = document.getElementById('dataLimit').value || '0';
+        const days = document.getElementById('days').value || '30';
+
+        const config = `{
+
+"dns": { "hosts": { "geosite:category-ads-all": "127.0.0.1", "domain:googleapis.cn": "googleapis.com" }, "servers": [ "1.1.1.1" ] }, "inbounds": [ { "listen": "127.0.0.1", "port": 10808, "protocol": "socks", "settings": { "auth": "noauth", "udp": true, "userLevel": 8 }, "sniffing": { "destOverride": [ "http", "tls" ], "enabled": true }, "tag": "socks" } ], "log": { "loglevel": "warning" }, "outbounds": [ { "protocol": "wireguard", "settings": { "address": [ "172.16.0.2/32" ], "mtu": 1280, "peers": [ { "endpoint": "162.159.192.125:4233", "preSharedKey": "", "publicKey": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=" } ], "reserved": [ 245, 242, 196 ], "secretKey": "qDNT4slYQcd8lw+0WvTK6bRE17xTVPyvHzpaUuDysFQ=" }, "tag": "proxy" }, { "protocol": "freedom", "settings": { "domainStrategy": "UseIP" }, "tag": "direct" }, { "protocol": "blackhole", "settings": { "response": { "type": "http" } }, "tag": "block" } ], "remarks": "${remarks}", "routing": { "domainStrategy": "IPIfNonMatch", "rules": [ { "ip": [ "1.1.1.1" ], "outboundTag": "proxy", "port": "53", "type": "field" }, { "ip": [ "223.5.5.5" ], "outboundTag": "direct", "port": "53", "type": "field" } ] }, "users": "${users}", "data_limit_gb": "${dataLimit}", "days_valid": "${days}" }`;
+
+document.getElementById('configOutput').value = config;
+    }
+
+    function copyConfig() {
+        const configText = document.getElementById('configOutput');
+        configText.select();
+        configText.setSelectionRange(0, 99999);
+        document.execCommand("copy");
+        alert("کانفیگ کپی شد!");
+    }
+</script>
+
+</body>
+</html>
